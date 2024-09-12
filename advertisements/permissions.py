@@ -8,4 +8,6 @@ class IsOwnerOrReadOnly(BasePermission):
             return True
         if request.method == "DELETE" and obj.creator != request.user:
             raise serializers.ValidationError('Можно удалять только свои объявления')
-        return request.user == obj.user
+        if request.method == "PATCH" and obj.creator != request.user:
+            raise serializers.ValidationError('Можно править только свои объявления')
+        return request.user == obj.creator
